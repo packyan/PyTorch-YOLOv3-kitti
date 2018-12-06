@@ -37,6 +37,10 @@ Uses pretrained weights to make predictions on images. `weights/yolov3-kitti.wei
 <p align="center"><img src="assets/18.png" width="480"\></p>
 <p align="center"><img src="assets/3.png" width="480"\></p>
 
+Small objects detection
+
+<p align="center"><img src="assets/4.png" width="480"\></p>
+
 ## Video
 
 run `video.py` to detect objects from a webcam or a video file.
