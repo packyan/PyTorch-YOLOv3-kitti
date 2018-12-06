@@ -1,0 +1,7 @@
+scikit-image
+numpy
+torch>=0.4.0
+torchvision
+pillow
+matplotlib
+visdom

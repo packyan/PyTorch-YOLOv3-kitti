@@ -1,0 +1,6 @@
+classes=8
+train=data/kitti/train.txt
+valid=data/kitti/val.txt
+names=data/kitti.names
+backup=backup/
+eval=kittiv1
