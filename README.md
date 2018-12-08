@@ -8,6 +8,7 @@ And Training from Kitti dataset
   * [Paper](#paper)
   * [Installation](#installation)
   * [Inference](#inference)
+  * [Video](#video)
   * [Test](#test)
   * [Train](#train)
   * [Credit](#credit)
