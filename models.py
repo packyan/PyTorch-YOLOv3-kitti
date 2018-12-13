@@ -276,9 +276,13 @@ class Darknet(nn.Module):
         self.losses["precision"] /= 3
         return sum(output) if is_training else torch.cat(output, 1)
 
-    def load_weights(self, weights_path):
+    def load_weights(self, weights_path, cutoff = -1):
         """Parses and loads the weights stored in 'weights_path'"""
+        # Parses and loads the weights stored in 'weights_path'
+        # @:param cutoff  - save layers between 0 and cutoff (cutoff = -1 -> all are saved)
 
+        if weights_path.endswith('darknet53.conv.74'):
+            cutoff = 75
         # Open the weights file
         fp = open(weights_path, "rb")
         header = np.fromfile(fp, dtype=np.int32, count=5)  # First five are header values
@@ -291,7 +295,7 @@ class Darknet(nn.Module):
         fp.close()
 
         ptr = 0
-        for i, (module_def, module) in enumerate(zip(self.module_defs, self.module_list)):
+        for i, (module_def, module) in enumerate(zip(self.module_defs[:cutoff], self.module_list[:cutoff])):
             if module_def["type"] == "convolutional":
                 conv_layer = module[0]
                 if module_def["batch_normalize"]:
