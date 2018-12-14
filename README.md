@@ -23,7 +23,8 @@ And Training from Kitti dataset
 
 ##### Download pretrained weights
 
-please download `weights/yolov3-kitti.weights`
+please download [pretrained weights file](https://drive.google.com/file/d/1BRJDDCMRXdQdQs6-x-3PmlzcEuT9wxJV/view?usp=sharing), and put it into `weights` folder, the path:
+`weights/yolov3-kitti.weights`
 
 ##### Download Kitti 
 
