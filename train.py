@@ -88,9 +88,23 @@ Tensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
 optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()))
 
 losses_x = losses_y = losses_w = losses_h = losses_conf = losses_cls = losses_recall = losses_precision = batch_loss= 0.0
+freeze_backbone = 1
 print("start traing")
+
 for epoch in range(opt.epochs):
     losses_x = losses_y = losses_w = losses_h = losses_conf = losses_cls = losses_recall = losses_precision = batch_loss= 0.0
+    
+        # Freeze darknet53.conv.74 layers for first epoch
+    if freeze_backbone:
+        if epoch == 0:
+            for i, (name, p) in enumerate(model.named_parameters()):
+                if int(name.split('.')[1]) < 75:  # if layer < 75
+                    p.requires_grad = False
+        elif epoch == 1:
+            for i, (name, p) in enumerate(model.named_parameters()):
+                if int(name.split('.')[1]) < 75:  # if layer < 75
+                    p.requires_grad = True
+                    
     for batch_i, (_, imgs, targets) in enumerate(dataloader):
         imgs = Variable(imgs.type(Tensor))
         targets = Variable(targets.type(Tensor), requires_grad=False)
