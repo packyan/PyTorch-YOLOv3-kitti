@@ -22,8 +22,9 @@ And Training from Kitti dataset
     $ cd PyTorch-YOLOv3-kitti/
     $ sudo pip3 install -r requirements.txt
 
+
 ##### Download pretrained weights
-download[darknet53.conv.74](https://pjreddie.com/media/files/darknet53.conv.74),and put it into `checkpoints/`
+if you wan use pretrained darknet-53 on IMAGENET weights, please download [darknet53.conv.74](https://pjreddie.com/media/files/darknet53.conv.74),and put it into `checkpoints/`
 
 if you just want a pretrained weights on kitti dataset for test or detect, please download [pretrained weights file](https://drive.google.com/file/d/1BRJDDCMRXdQdQs6-x-3PmlzcEuT9wxJV/view?usp=sharing), and put it into `weights` folder, the path:
 `weights/yolov3-kitti.weights`
@@ -46,6 +47,7 @@ Uses pretrained weights to make predictions on images. `weights/yolov3-kitti.wei
 Small objects detection
 
 <p align="center"><img src="assets/4.png" width="480"\></p>
+
 ## Detect
 
 run`detect.py` to detect objects, and please  put samples into `data/samples`
