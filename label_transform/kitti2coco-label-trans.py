@@ -9,8 +9,7 @@ import sys
 kitti_img_path ='/home/pakcy/Desktop/PyTorch-YOLOv3-kitti/label_transform/kitti/images/'
 kitti_label_path = '/home/pakcy/Desktop/PyTorch-YOLOv3-kitti/label_transform/kitti/lables/'
 
-#kitti_img_path = '/home/pakcy/Desktop/PyTorch-YOLOv3-kitti/data/kitti/images/train/'
-#kitti_label_path = '/home/pakcy/Desktop/PyTorch-YOLOv3-kitti/data/kitti/raw_labels/train/'
+
 
 #transformed lables to save path
 kitti_label_tosave_path = 'kitti/labels2coco/'

@@ -10,6 +10,7 @@ And Training from Kitti dataset
   * [Inference](#inference)
   * [Video](#video)
   * [Test](#test)
+  * [Detect](#detect)
   * [Train](#train)
   * [Credit](#credit)
 
@@ -22,13 +23,16 @@ And Training from Kitti dataset
     $ sudo pip3 install -r requirements.txt
 
 ##### Download pretrained weights
+download[darknet53.conv.74](https://pjreddie.com/media/files/darknet53.conv.74),and put it into `checkpoints/`
 
-please download [pretrained weights file](https://drive.google.com/file/d/1BRJDDCMRXdQdQs6-x-3PmlzcEuT9wxJV/view?usp=sharing), and put it into `weights` folder, the path:
+if you just want a pretrained weights on kitti dataset for test or detect, please download [pretrained weights file](https://drive.google.com/file/d/1BRJDDCMRXdQdQs6-x-3PmlzcEuT9wxJV/view?usp=sharing), and put it into `weights` folder, the path:
 `weights/yolov3-kitti.weights`
 
 ##### Download Kitti 
 
 [The KITTI Vision Benchmark Suite](http://www.cvlibs.net/datasets/kitti/eval_object.php)
+
+and you should transfrom kitti lable to coco label, by using [label_transform](label_transform/README.md)
 
 ## Inference
 Uses pretrained weights to make predictions on images. `weights/yolov3-kitti.weights` was trained by kitti data set.
@@ -42,6 +46,10 @@ Uses pretrained weights to make predictions on images. `weights/yolov3-kitti.wei
 Small objects detection
 
 <p align="center"><img src="assets/4.png" width="480"\></p>
+## Detect
+
+run`detect.py` to detect objects, and please  put samples into `data/samples`
+defult weights files is `weights/kitti.weights`
 
 ## Video
 
@@ -49,9 +57,11 @@ run `video.py` to detect objects from a webcam or a video file.
 
 ## Test
 
-NOTICE: DID NOT TEST YET!!!
+run `test.py`
 
 ## Train
+Please run `python3 -m visdom.server` first to vislizer your training loss.
+
 Data augmentation as well as additional training tricks remains to be implemented. PRs are welcomed!
 ```
     train.py [-h] [--epochs EPOCHS] [--image_folder IMAGE_FOLDER]

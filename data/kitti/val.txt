@@ -1,0 +1,16 @@
+/home/pakcy/Desktop/PyTorch-YOLOv3/data/kitti/images/train/000000.png
+/home/pakcy/Desktop/PyTorch-YOLOv3/data/kitti/images/train/000001.png
+/home/pakcy/Desktop/PyTorch-YOLOv3/data/kitti/images/train/000002.png
+/home/pakcy/Desktop/PyTorch-YOLOv3/data/kitti/images/train/000003.png
+/home/pakcy/Desktop/PyTorch-YOLOv3/data/kitti/images/train/000004.png
+/home/pakcy/Desktop/PyTorch-YOLOv3/data/kitti/images/train/000005.png
+/home/pakcy/Desktop/PyTorch-YOLOv3/data/kitti/images/train/000006.png
+/home/pakcy/Desktop/PyTorch-YOLOv3/data/kitti/images/train/000007.png
+/home/pakcy/Desktop/PyTorch-YOLOv3/data/kitti/images/train/000008.png
+/home/pakcy/Desktop/PyTorch-YOLOv3/data/kitti/images/train/000009.png
+/home/pakcy/Desktop/PyTorch-YOLOv3/data/kitti/images/train/000010.png
+/home/pakcy/Desktop/PyTorch-YOLOv3/data/kitti/images/train/000011.png
+/home/pakcy/Desktop/PyTorch-YOLOv3/data/kitti/images/train/000012.png
+/home/pakcy/Desktop/PyTorch-YOLOv3/data/kitti/images/train/000013.png
+/home/pakcy/Desktop/PyTorch-YOLOv3/data/kitti/images/train/000014.png
+/home/pakcy/Desktop/PyTorch-YOLOv3/data/kitti/images/train/000015.png
