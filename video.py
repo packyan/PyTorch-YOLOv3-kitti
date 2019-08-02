@@ -112,7 +112,7 @@ if __name__ == '__main__':
     assert cap.isOpened(), 'Cannot capture source'
     
     frames = 0
-       
+    rendering = 1  
     while cap.isOpened():
         
         ret, frame = cap.read()
@@ -139,44 +139,45 @@ if __name__ == '__main__':
             fps = int(1/(inference_time))
             print('current fps is : %d'%fps)
             
-            kitti_img_size = 416
-            # The amount of padding that was added
-            #pad_x = max(img.shape[0] - img.shape[1], 0) * (opt.img_size / max(img.shape))
-            #pad_y = max(img.shape[1] - img.shape[0], 0) * (opt.img_size / max(img.shape))
-            pad_x = max(img.shape[0] - img.shape[1], 0) * (kitti_img_size / max(img.shape))
-            pad_y = max(img.shape[1] - img.shape[0], 0) * (kitti_img_size / max(img.shape))
-            # Image height and width after padding is removed
-            unpad_h = kitti_img_size - pad_y
-            unpad_w = kitti_img_size - pad_x
+            if(rendering):
+                kitti_img_size = 416
+                # The amount of padding that was added
+                #pad_x = max(img.shape[0] - img.shape[1], 0) * (opt.img_size / max(img.shape))
+                #pad_y = max(img.shape[1] - img.shape[0], 0) * (opt.img_size / max(img.shape))
+                pad_x = max(img.shape[0] - img.shape[1], 0) * (kitti_img_size / max(img.shape))
+                pad_y = max(img.shape[1] - img.shape[0], 0) * (kitti_img_size / max(img.shape))
+                # Image height and width after padding is removed
+                unpad_h = kitti_img_size - pad_y
+                unpad_w = kitti_img_size - pad_x
 
-            # Draw bounding boxes and labels of detections
-            if detection is not None:
-                #print(img.shape)
-                unique_labels = detection[:, -1].cpu().unique()
-                n_cls_preds = min(len(unique_labels),20)
-                bbox_colors = random.sample(colors, n_cls_preds)
-                for x1, y1, x2, y2, conf, cls_conf, cls_pred in detection:
-                    cls_pred = min(cls_pred,8)     
-                    #print ('\t+ Label: %s, Conf: %.5f' % (classes[int(cls_pred)], cls_conf.item()))
-                    # Rescale coordinates to original dimensions
-                    box_h = int(((y2 - y1) / unpad_h) * (img.shape[0]))
-                    box_w = int(((x2 - x1) / unpad_w) * (img.shape[1]) )
-                    y1 = int(((y1 - pad_y // 2) / unpad_h) * (img.shape[0]))
-                    x1 = int(((x1 - pad_x // 2) / unpad_w) * (img.shape[1]))
-                    x2 = int(x1 + box_w)
-                    y2 = int(y1 + box_h)
-                    color = bbox_colors[int(np.where(unique_labels == int(cls_pred))[0])]
-                    #print(color)
-                    cv2.line(img,(int(x1), int(y1-5)),(int(x2), int(y1-5)),(255,255,255),14)
-                    cv2.putText(img, classes[int(cls_pred)], (int(x1), int(y1)), cvfont, 1.5, (color[0]*255,color[1]*255,color[2]*255),2)
-                    cv2.rectangle(img, (int(x1),int(y1)), (int(x2),int(y2)), (color[0]*255,color[1]*255,color[2]*255), 1)
-            cv2.imshow('frame', img)
-            # free buffer
-            #cv2.imshow('kitti detecting window',plt)
-            #plt.savefig('output/%d.png' % (img_i), bbox_inches='tight', pad_inches=0.0)
-            key = cv2.waitKey(1)  
-            if key & 0xFF == ord('q'):
-                break  
+                # Draw bounding boxes and labels of detections
+                if detection is not None:
+                    #print(img.shape)
+                    unique_labels = detection[:, -1].cpu().unique()
+                    n_cls_preds = min(len(unique_labels),20)
+                    bbox_colors = random.sample(colors, n_cls_preds)
+                    for x1, y1, x2, y2, conf, cls_conf, cls_pred in detection:
+                        cls_pred = min(cls_pred,8)     
+                        #print ('\t+ Label: %s, Conf: %.5f' % (classes[int(cls_pred)], cls_conf.item()))
+                        # Rescale coordinates to original dimensions
+                        box_h = int(((y2 - y1) / unpad_h) * (img.shape[0]))
+                        box_w = int(((x2 - x1) / unpad_w) * (img.shape[1]) )
+                        y1 = int(((y1 - pad_y // 2) / unpad_h) * (img.shape[0]))
+                        x1 = int(((x1 - pad_x // 2) / unpad_w) * (img.shape[1]))
+                        x2 = int(x1 + box_w)
+                        y2 = int(y1 + box_h)
+                        color = bbox_colors[int(np.where(unique_labels == int(cls_pred))[0])]
+                        #print(color)
+                        cv2.line(img,(int(x1), int(y1-5)),(int(x2), int(y1-5)),(255,255,255),14)
+                        cv2.putText(img, classes[int(cls_pred)], (int(x1), int(y1)), cvfont, 1.5, (color[0]*255,color[1]*255,color[2]*255),2)
+                        cv2.rectangle(img, (int(x1),int(y1)), (int(x2),int(y2)), (color[0]*255,color[1]*255,color[2]*255), 1)
+                cv2.imshow('frame', img)
+                # free buffer
+                #cv2.imshow('kitti detecting window',plt)
+                #plt.savefig('output/%d.png' % (img_i), bbox_inches='tight', pad_inches=0.0)
+                key = cv2.waitKey(1)  
+                if key & 0xFF == ord('q'):
+                    break  
                 
         #no ret berak         
         else:

@@ -15,7 +15,7 @@ And Training from Kitti dataset
   * [Credit](#credit)
 
 
-## HI~THERE~ THIS repo is forked from [eriklindernoren](https://github.com/eriklindernoren/PyTorch-YOLOv3)
+## HI THERE~ THIS repo is forked from [eriklindernoren](https://github.com/eriklindernoren/PyTorch-YOLOv3)
 
 ## Installation
     $ git clone https://github.com/packyan/PyTorch-YOLOv3-kitti.git
@@ -56,7 +56,7 @@ defult weights files is `weights/kitti.weights`
 ## Video
 
 run `video.py` to detect objects from a webcam or a video file.
-
+On I7 7700 8G GTX1070 FPS is 22 cause some problems, test resized images is really faster than resizeing images and then inference.
 ## Test
 
 run `test.py`
