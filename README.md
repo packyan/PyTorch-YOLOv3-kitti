@@ -105,3 +105,7 @@ https://pjreddie.com/yolo/.
   year={2018}
 }
 ```
+
+## 注意点：
+
+- 将pycharm的工作目录转换成项目根目录
