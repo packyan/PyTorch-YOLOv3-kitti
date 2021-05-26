@@ -10,7 +10,7 @@ kitti_img_path = r'D:\code\mmdetection3d\data\kitti\training\image_2'
 kitti_label_path = r'D:\code\mmdetection3d\data\kitti\training\label_2'
 
 # transformed lables to save path
-kitti_label_tosave_path = 'kitti/labels2coco/'
+kitti_label_tosave_path = 'data/kitti/labels2coco/'
 
 # the absolute ptah of your data set
 # kitti_data_real_path = '/home/pakcy/Desktop/PyTorch-YOLOv3/data/kitti/images/train/'
@@ -18,7 +18,7 @@ kitti_label_tosave_path = 'kitti/labels2coco/'
 index = 0
 cvfont = cv2.FONT_HERSHEY_SIMPLEX
 
-kitti_names = open('kitti.names', 'r')
+kitti_names = open('label_transform/kitti.names', 'r')
 kitti_names_contents = kitti_names.readlines()
 kitti_images = os.listdir(kitti_img_path)
 kitti_labels = os.listdir(kitti_label_path)
@@ -35,7 +35,7 @@ kitti_names_num = dict(zip(kitti_names_dic_key, values))
 # print(kitti_names_num)
 
 # 创建训练集图片的List
-f = open('train.txt', 'w')
+f = open('data/kitti/train.txt', 'w')
 for img in kitti_images:
     f.write(os.path.join(kitti_img_path, img) + '\n')
 f.close()
