@@ -1,5 +1,7 @@
 from __future__ import division
 
+from pathlib import Path
+
 from models import *
 from utils.utils import *
 from utils.datasets import *
@@ -20,12 +22,15 @@ import matplotlib.patches as patches
 from matplotlib.ticker import NullLocator
 
 kitti_weights = 'weights/yolov3-kitti.weights'
+save_dir = 'output/'
+if not os.path.exists(save_dir):
+    os.mkdir(save_dir)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--image_folder', type=str, default='data/samples/', help='path to dataset')  # 不知道为啥，前面会多一个“/”
 parser.add_argument('--config_path', type=str, default='config/yolov3-kitti.cfg', help='path to model config file')
 parser.add_argument('--weights_path', type=str, default=kitti_weights, help='path to weights file')
-parser.add_argument('--class_path', type=str, default='data/kitti.names', help='path to class label file')
+parser.add_argument('--class_path', type=str, default='label_transform/kitti.names', help='path to class label file')
 parser.add_argument('--conf_thres', type=float, default=0.8, help='object confidence threshold')
 parser.add_argument('--nms_thres', type=float, default=0.4, help='iou thresshold for non-maximum suppression')
 parser.add_argument('--batch_size', type=int, default=2, help='size of the batches')
@@ -50,7 +55,8 @@ if cuda:
     print("using cuda model")
 
 model.eval()  # Set in evaluation mode
-image_folder = opt.image_folder[1:]  # 不知道为啥，前面会多一个“/”
+# image_folder = opt.image_folder[1:]  # 不知道为啥，前面会多一个“/”
+image_folder = opt.image_folder
 dataset = ImageFolder(image_folder, img_size=opt.img_size)
 dataloader = DataLoader(dataset, batch_size=opt.batch_size, shuffle=False, num_workers=opt.n_cpu)
 
@@ -145,5 +151,7 @@ for img_i, (path, detections) in enumerate(zip(imgs, img_detections)):
     plt.axis('off')
     plt.gca().xaxis.set_major_locator(NullLocator())
     plt.gca().yaxis.set_major_locator(NullLocator())
-    plt.savefig('output/%d.png' % (img_i), bbox_inches='tight', pad_inches=0.0)
+
+    img_path = '{}{}.png'.format(save_dir, img_i)
+    plt.savefig(img_path, bbox_inches='tight', pad_inches=0.0)
     plt.close()
