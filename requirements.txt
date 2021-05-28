@@ -5,3 +5,4 @@ torchvision
 pillow
 matplotlib
 visdom
+tqdm

@@ -1,42 +1,31 @@
 # PyTorch-YOLOv3-Kitti
-Minimal implementation of YOLOv3 in PyTorch.
-And Training from Kitti dataset
-
-## Table of Contents
-- [PyTorch-YOLOv3](#pytorch-yolov3-kitti)
-  * [Table of Contents](#table-of-contents)
-  * [Paper](#paper)
-  * [Installation](#installation)
-  * [Inference](#inference)
-  * [Video](#video)
-  * [Test](#test)
-  * [Detect](#detect)
-  * [Train](#train)
-  * [Credit](#credit)
+ YOLOv3-PyTorch 在 Kitti 数据集上训练
 
 
-## HI THERE~ THIS repo is forked from [eriklindernoren](https://github.com/eriklindernoren/PyTorch-YOLOv3)
+#### 本仓库 forked from [eriklindernoren](https://github.com/eriklindernoren/PyTorch-YOLOv3)
 
-## Installation
-    $ git clone https://github.com/packyan/PyTorch-YOLOv3-kitti.git
-    $ cd PyTorch-YOLOv3-kitti/
-    $ sudo pip3 install -r requirements.txt
+## 安装
+```bash
+$ git clone https://github.com/packyan/PyTorch-YOLOv3-kitti.git
+$ cd PyTorch-YOLOv3-kitti/
+$ sudo pip3 install -r requirements.txt
+```
 
 
-##### Download pretrained weights
-if you wan use pretrained darknet-53 on IMAGENET weights, please download [darknet53.conv.74](https://pjreddie.com/media/files/darknet53.conv.74),and put it into `checkpoints/`
+## 下载预训练权值
+如果你想用经过darknet-53 在 IMAGENET上预训练过的权值, 请从 [darknet53.conv.74](https://pjreddie.com/media/files/darknet53.conv.74)下载,放到`checkpoints/`文件夹下
 
-if you just want a pretrained weights on kitti dataset for test or detect, please download [pretrained weights file](https://drive.google.com/file/d/1BRJDDCMRXdQdQs6-x-3PmlzcEuT9wxJV/view?usp=sharing), and put it into `weights` folder, the path:
+如果你想用经过darknet-53 在 KITTI上预训练过的权值, 用作检测或训练，请从[pretrained weights file](https://drive.google.com/file/d/1BRJDDCMRXdQdQs6-x-3PmlzcEuT9wxJV/view?usp=sharing), 将它放到 `weights` 目录下, the path:
 `weights/yolov3-kitti.weights`
 
-##### Download Kitti 
+## 下载KITTI数据集
 
 [The KITTI Vision Benchmark Suite](http://www.cvlibs.net/datasets/kitti/eval_object.php)
 
-and you should transfrom kitti lable to coco label, by using [label_transform](label_transform/README.md)
+将你下载的KITTI数据集转换成COCO数据集格式：请参考 [label_transform](label_transform/README.md)
 
-## Inference
-Uses pretrained weights to make predictions on images. `weights/yolov3-kitti.weights` was trained by kitti data set.
+## 推理Inference
+使用预训练过的权值进行预测。 weights/yolov3-kitti.weights 已经在KITTI数据集上训练过。
 `python3 detect.py --image_folder /data/samples`
 
 <p align="center"><img src="assets/12.png" width="480"\></p>
@@ -44,11 +33,11 @@ Uses pretrained weights to make predictions on images. `weights/yolov3-kitti.wei
 <p align="center"><img src="assets/18.png" width="480"\></p>
 <p align="center"><img src="assets/3.png" width="480"\></p>
 
-Small objects detection
+小目标检测
 
 <p align="center"><img src="assets/4.png" width="480"\></p>
 
-## Detect
+## 检测
 
 run`detect.py` to detect objects, and please  put samples into `data/samples`
 defult weights files is `weights/kitti.weights`
@@ -61,7 +50,7 @@ On I7 7700 8G GTX1070 FPS is 22 cause some problems, test resized images is real
 
 run `test.py`
 
-## Train
+## 训练
 Please run `python3 -m visdom.server` first to vislizer your training loss.
 
 Data augmentation as well as additional training tricks remains to be implemented. PRs are welcomed!
@@ -76,7 +65,13 @@ Data augmentation as well as additional training tricks remains to be implemente
                 [--checkpoint_interval CHECKPOINT_INTERVAL]
                 [--checkpoint_dir CHECKPOINT_DIR]
 ```
+- 训练之前首先把数据集转换成COCO格式，请参考 [label_transform](label_transform/README.md)
+- 修改`datasets.py`中`ListDataset`的`labels_coco_type_path` 变量，变量值为将KITTI转换成COCO数据集格式的label文件夹
+
+
+
 ## Paper
+
 ### YOLOv3: An Incremental Improvement
 _Joseph Redmon, Ali Farhadi_ <br>
 
@@ -105,3 +100,7 @@ https://pjreddie.com/yolo/.
   year={2018}
 }
 ```
+
+## 注意点：
+
+- 将pycharm的工作目录转换成项目根目录
