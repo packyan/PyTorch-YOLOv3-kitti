@@ -6,8 +6,10 @@ import sys
 # set your data_set absolute path
 # as for me, for example
 # test example
-kitti_img_path = r'D:\code\mmdetection3d\data\kitti\training\image_2'
-kitti_label_path = r'D:\code\mmdetection3d\data\kitti\training\label_2'
+# kitti_img_path = r'D:\code\mmdetection3d\data\kitti\training\image_2'
+# kitti_label_path = r'D:\code\mmdetection3d\data\kitti\training\label_2'
+kitti_img_path = "/home/caizhengyi/code/mmdetection3d/data/kitti/training/image_2/"
+kitti_label_path = "/home/caizhengyi/code/mmdetection3d/data/kitti/training/label_2/"
 
 # transformed lables to save path
 kitti_label_tosave_path = 'data/kitti/labels2coco/'
@@ -18,7 +20,7 @@ kitti_label_tosave_path = 'data/kitti/labels2coco/'
 index = 0
 cvfont = cv2.FONT_HERSHEY_SIMPLEX
 
-kitti_names = open('label_transform/kitti.names', 'r')
+kitti_names = open('data/kitti.names', 'r')
 kitti_names_contents = kitti_names.readlines()
 kitti_images = os.listdir(kitti_img_path)
 kitti_labels = os.listdir(kitti_label_path)

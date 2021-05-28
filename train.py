@@ -22,9 +22,11 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--epochs", type=int, default=100, help="number of epochs")
 parser.add_argument("--image_folder", type=str, default="data/samples", help="path to dataset")
 parser.add_argument("--batch_size", type=int, default=10, help="size of each image batch")
-parser.add_argument("--model_config_path", type=str, default="config/yolov3-kitti.cfg", help="path to model config file")
+parser.add_argument("--model_config_path", type=str, default="config/yolov3-kitti.cfg",
+                    help="path to model config file")
 parser.add_argument("--data_config_path", type=str, default="config/kitti.data", help="path to data config file")
-parser.add_argument("--weights_path", type=str, default="checkpoints/darknet53.conv.74", help="path to weights file/ can use darknet53.conv.74")
+parser.add_argument("--weights_path", type=str, default="checkpoints/darknet53.conv.74",
+                    help="path to weights file/ can use darknet53.conv.74")
 parser.add_argument("--class_path", type=str, default="data/kitti.names", help="path to class label file")
 parser.add_argument("--iou_thres", type=float, default=0.5, help="iou threshold required to qualify as detected")
 parser.add_argument("--conf_thres", type=float, default=0.8, help="object confidence threshold")
@@ -32,12 +34,13 @@ parser.add_argument("--nms_thres", type=float, default=0.4, help="iou thresshold
 parser.add_argument("--n_cpu", type=int, default=0, help="number of cpu threads to use during batch generation")
 parser.add_argument("--img_size", type=int, default=416, help="size of each image dimension")
 parser.add_argument("--checkpoint_interval", type=int, default=2, help="interval between saving model weights")
-parser.add_argument("--checkpoint_dir", type=str, default="checkpoints", help="directory where model checkpoints are saved")
+parser.add_argument("--checkpoint_dir", type=str, default="checkpoints",
+                    help="directory where model checkpoints are saved")
 parser.add_argument("--use_cuda", type=bool, default=True, help="whether to use cuda if available")
 opt = parser.parse_args()
 print(opt)
 my_dataset = opt.data_config_path
-print('use'+ my_dataset)
+print('use' + my_dataset)
 freeze_backbone = 1
 vis = Visualizer('yolo v3')
 
@@ -69,11 +72,12 @@ num_classes = int(data_config["classes"])
 # print(weights_path_latest)
 # Initiate model
 model = Darknet(opt.model_config_path)
-#model.apply(weights_init_normal)
+# model.apply(weights_init_normal)
 model.load_weights(opt.weights_path)
-#model.apply(weights_init_normal)
+# model.apply(weights_init_normal)
 
 if cuda:
+    # model = nn.DataParallel(model)
     model = model.cuda()
     print("CUDA is ready")
 
@@ -88,109 +92,21 @@ Tensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
 
 optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()))
 
-losses_x = losses_y = losses_w = losses_h = losses_conf = losses_cls = losses_recall = losses_precision = batch_loss= 0.0
+losses_x = losses_y = losses_w = losses_h = losses_conf = losses_cls = losses_recall = losses_precision = batch_loss = 0.0
 accumulated_batches = 4
 best_mAP = 0.0
 
-
 print("start traing")
-loss_data_file = open('loss data.txt','w+')
-test_data_file = open('test_data.txt','w+')
+loss_data_file = open('loss data.txt', 'w+')
+test_data_file = open('test_data.txt', 'w+')
 
-#use for test, get AP on valid test
+# use for test, get AP on valid test
 test_dataset = ListDataset(test_path)
-test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=16, shuffle=False, num_workers=opt.n_cpu) 
+test_dataloader = torch.utils.data.DataLoader(test_dataset, batch_size=16, shuffle=False, num_workers=opt.n_cpu)
 
 
-for epoch in range(opt.epochs):
-    losses_x = losses_y = losses_w = losses_h = losses_conf = losses_cls = losses_recall = losses_precision = batch_loss= 0.0
-    # Freeze darknet53.conv.74 layers for first some epochs
-    if freeze_backbone:
-        if epoch < 20:
-            for i, (name, p) in enumerate(model.named_parameters()):
-                if int(name.split('.')[1]) < 75:  # if layer < 75
-                    p.requires_grad = False
-        elif epoch >= 20:
-            for i, (name, p) in enumerate(model.named_parameters()):
-                if int(name.split('.')[1]) < 75:  # if layer < 75
-                    p.requires_grad = True
-                    
-    optimizer.zero_grad()   
-                   
-    for batch_i, (_, imgs, targets) in enumerate(dataloader):
-        imgs = Variable(imgs.type(Tensor))
-        targets = Variable(targets.type(Tensor), requires_grad=False)
-       
-        loss = model(imgs, targets)
-
-        loss.backward()
-        #optimizer.step()
-                # accumulate gradient for x batches before optimizing
-        if ((batch_i + 1) % accumulated_batches == 0) or (batch_i == len(dataloader) - 1):
-            optimizer.step()
-            optimizer.zero_grad()
-            
-        losses_x += model.losses["x"]
-        losses_y += model.losses["y"]
-        losses_w += model.losses["w"]
-        losses_h += model.losses["h"]
-        losses_conf += model.losses["conf"]
-        losses_cls += model.losses["cls"]
-        losses_recall += model.losses["recall"]
-        losses_precision += model.losses["precision"]
-        batch_loss += loss.item()
-        
-        if (batch_i+1) % 50 == 0:
-            loss_data_file.flush()
-            vis.plot('Losses:x',losses_x)
-            vis.plot('Losses:y',losses_y)
-            vis.plot('Losses:w',losses_w)
-            vis.plot('Losses:h',losses_h)
-            vis.plot('Losses:conf',losses_conf)
-            vis.plot('Losses:cls',losses_cls)
-            vis.plot('Recall',losses_recall)
-            vis.plot('Precision',losses_precision)
-            vis.plot('Total Loss',batch_loss)
-            losses_x = losses_y = losses_w = losses_h = losses_conf = losses_cls = losses_recall = losses_precision = batch_loss= 0.0
-        
-        #imgs_num = 1
-        loss_data = "%.5f\t%.5f\t%.5f\t%.5f\t%.5f\t%.5f\t%.5f\t%.5f\t%.5f\n"% (
-                model.losses["x"] ,
-                model.losses["y"] ,
-                model.losses["w"] ,
-                model.losses["h"] ,
-                model.losses["conf"] ,
-                model.losses["cls"] ,
-                loss.item(),
-                model.losses["recall"] ,
-                model.losses["precision"],
-            )
-        loss_data_file.write(loss_data)
-        print(
-            "[Epoch %d/%d, Batch %d/%d] [Losses: x %f, y %f, w %f, h %f, conf %f, cls %f, total %f, recall: %.5f, precision: %.5f]"
-            % (
-                epoch,
-                opt.epochs,
-                batch_i,
-                len(dataloader),
-                model.losses["x"],
-                model.losses["y"],
-                model.losses["w"],
-                model.losses["h"],
-                model.losses["conf"],
-                model.losses["cls"],
-                loss.item(),
-                model.losses["recall"],
-                model.losses["precision"],
-            )
-        )
-
-        model.seen += imgs.size(0)
-	
-    if epoch % opt.checkpoint_interval == 0:
-        model.save_weights("%s/%d.weights" % (opt.checkpoint_dir, epoch))
-        
-    #mean_AP = test_model(test_dataloader, test_data_file, model)
+def test_mAP():
+    # mean_AP = test_model(test_dataloader, test_data_file, model)
     print("Compute %d Epoch mAP..." % epoch)
 
     all_detections = []
@@ -295,16 +211,108 @@ for epoch in range(opt.epochs):
     print("Average Precisions:")
     for c, ap in average_precisions.items():
         print(f"+ Class '{c}' - AP: {ap}")
-        test_data_file.write("%.5f "%ap)
+        test_data_file.write("%.5f " % ap)
     mAP = np.mean(list(average_precisions.values()))
     print(f"mAP: {mAP}")
-    test_data_file.write("%.5f\n"% mAP)
-    
-    if(mAP > best_mAP):
+    test_data_file.write("%.5f\n" % mAP)
+
+    if (mAP > best_mAP):
         best_mAP = mAP
         model.save_weights("%s/kitti_best.weights" % (opt.checkpoint_dir))
         print("New Best AP appear !!! %f" % best_mAP)
         test_data_file.flush()
-    
+
+
+for epoch in range(opt.epochs):
+    losses_x = losses_y = losses_w = losses_h = losses_conf = losses_cls = losses_recall = losses_precision = batch_loss = 0.0
+    # Freeze darknet53.conv.74 layers for first some epochs
+    if freeze_backbone:
+        if epoch < 20:
+            for i, (name, p) in enumerate(model.named_parameters()):
+                if int(name.split('.')[1]) < 75:  # if layer < 75
+                    p.requires_grad = False
+        elif epoch >= 20:
+            for i, (name, p) in enumerate(model.named_parameters()):
+                if int(name.split('.')[1]) < 75:  # if layer < 75
+                    p.requires_grad = True
+
+    optimizer.zero_grad()
+
+    for batch_i, (_, imgs, targets) in enumerate(dataloader):
+        imgs = Variable(imgs.type(Tensor))
+        targets = Variable(targets.type(Tensor), requires_grad=False)
+
+        loss = model(imgs, targets)
+
+        loss.backward()
+        # optimizer.step()
+        # accumulate gradient for x batches before optimizing
+        if ((batch_i + 1) % accumulated_batches == 0) or (batch_i == len(dataloader) - 1):
+            optimizer.step()
+            optimizer.zero_grad()
+
+        losses_x += model.losses["x"]
+        losses_y += model.losses["y"]
+        losses_w += model.losses["w"]
+        losses_h += model.losses["h"]
+        losses_conf += model.losses["conf"]
+        losses_cls += model.losses["cls"]
+        losses_recall += model.losses["recall"]
+        losses_precision += model.losses["precision"]
+        batch_loss += loss.item()
+
+        if (batch_i + 1) % 50 == 0:
+            loss_data_file.flush()
+            vis.plot('Losses:x', losses_x)
+            vis.plot('Losses:y', losses_y)
+            vis.plot('Losses:w', losses_w)
+            vis.plot('Losses:h', losses_h)
+            vis.plot('Losses:conf', losses_conf)
+            vis.plot('Losses:cls', losses_cls)
+            vis.plot('Recall', losses_recall)
+            vis.plot('Precision', losses_precision)
+            vis.plot('Total Loss', batch_loss)
+            losses_x = losses_y = losses_w = losses_h = losses_conf = losses_cls = losses_recall = losses_precision = batch_loss = 0.0
+
+        # imgs_num = 1
+        loss_data = "%.5f\t%.5f\t%.5f\t%.5f\t%.5f\t%.5f\t%.5f\t%.5f\t%.5f\n" % (
+            model.losses["x"],
+            model.losses["y"],
+            model.losses["w"],
+            model.losses["h"],
+            model.losses["conf"],
+            model.losses["cls"],
+            loss.item(),
+            model.losses["recall"],
+            model.losses["precision"],
+        )
+        loss_data_file.write(loss_data)
+        print(
+            "[Epoch %d/%d, Batch %d/%d] [Losses: x %f, y %f, w %f, h %f, conf %f, cls %f, total %f, recall: %.5f, precision: %.5f]"
+            % (
+                epoch,
+                opt.epochs,
+                batch_i,
+                len(dataloader),
+                model.losses["x"],
+                model.losses["y"],
+                model.losses["w"],
+                model.losses["h"],
+                model.losses["conf"],
+                model.losses["cls"],
+                loss.item(),
+                model.losses["recall"],
+                model.losses["precision"],
+            )
+            )
+
+        model.seen += imgs.size(0)
+
+    if epoch % opt.checkpoint_interval == 0:
+        model.save_weights("%s/%d.weights" % (opt.checkpoint_dir, epoch))
+
+    if (epoch+1) % opt.checkpoint_interval == 0:
+        test_mAP()
+
 loss_data_file.close()
 test_data_file.close()

@@ -51,9 +51,10 @@ class ListDataset(Dataset):
     def __init__(self, list_path, img_size=416):
         with open(list_path, 'r') as file:
             self.img_files = file.readlines()
-        labels_coco_type_path = 'D:\code\PycharmProjects\PyTorch-YOLOv3-kitti\data\kitti\labels2coco'
+        # labels_coco_type_path = 'D:\code\PycharmProjects\PyTorch-YOLOv3-kitti\data\kitti\labels2coco'
+        labels_coco_type_path = "/home/caizhengyi/code/PyTorch-YOLOv3-kitti/data/kitti/labels2coco/"
         # self.label_files = [path.replace('image_2', 'label_2').replace('.png', '.txt').replace('.jpg', '.txt') for path in self.img_files]
-        self.label_files = ['{}\{}'.format(labels_coco_type_path, path) for path in os.listdir(labels_coco_type_path)]
+        self.label_files = ['{}{}'.format(labels_coco_type_path, path) for path in os.listdir(labels_coco_type_path)]
         self.img_shape = (img_size, img_size)
         self.max_objects = 50
 
