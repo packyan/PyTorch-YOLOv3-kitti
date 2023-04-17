@@ -39,7 +39,7 @@ print(opt)
 my_dataset = opt.data_config_path
 print('use'+ my_dataset)
 freeze_backbone = 1
-vis = Visualizer('yolo v3')
+# vis = Visualizer('yolo v3')
 
 cuda = torch.cuda.is_available() and opt.use_cuda
 
@@ -142,15 +142,15 @@ for epoch in range(opt.epochs):
         
         if (batch_i+1) % 50 == 0:
             loss_data_file.flush()
-            vis.plot('Losses:x',losses_x)
-            vis.plot('Losses:y',losses_y)
-            vis.plot('Losses:w',losses_w)
-            vis.plot('Losses:h',losses_h)
-            vis.plot('Losses:conf',losses_conf)
-            vis.plot('Losses:cls',losses_cls)
-            vis.plot('Recall',losses_recall)
-            vis.plot('Precision',losses_precision)
-            vis.plot('Total Loss',batch_loss)
+            # vis.plot('Losses:x',losses_x)
+            # vis.plot('Losses:y',losses_y)
+            # vis.plot('Losses:w',losses_w)
+            # vis.plot('Losses:h',losses_h)
+            # vis.plot('Losses:conf',losses_conf)
+            # vis.plot('Losses:cls',losses_cls)
+            # vis.plot('Recall',losses_recall)
+            # vis.plot('Precision',losses_precision)
+            # vis.plot('Total Loss',batch_loss)
             losses_x = losses_y = losses_w = losses_h = losses_conf = losses_cls = losses_recall = losses_precision = batch_loss= 0.0
         
         #imgs_num = 1
